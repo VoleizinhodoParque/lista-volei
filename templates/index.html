@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Vôlei</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lista de Vôlei</h1>
+
+    {% if not horario_valido %}
+    <div style="color: red;">
+        Inscrições abertas apenas entre 12:00 e 23:59
+    </div>
+    {% endif %}
+
+    <form action="/inscrever" method="post">
+        <input type="text" name="nome" placeholder="Seu nome" required>
+        <input type="submit" value="Inscrever" 
+               {% if not horario_valido %}disabled{% endif %}>
+    </form>
+
+    <form action="/cancelar" method="post">
+        <input type="text" name="nome" placeholder="Seu nome para cancelar" required>
+        <input type="submit" value="Cancelar Inscrição">
+    </form>
+
+    <h2>Vagas ({{ vagas|length }}/22)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Posição</th>
+                <th>Nome</th>
+                <th>Horário</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for vaga in vagas %}
+            <tr>
+                <td>{{ vaga.posicao }}</td>
+                <td>{{ vaga.nome }}</td>
+                <td>{{ vaga.hora_inscricao.strftime('%H:%M:%S') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Lista de Espera ({{ espera|length }}/50)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Posição</th>
+                <th>Nome</th>
+                <th>Horário</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pessoa in espera %}
+            <tr>
+                <td>{{ pessoa.posicao }}</td>
+                <td>{{ pessoa.nome }}</td>
+                <td>{{ pessoa.hora_inscricao.strftime('%H:%M:%S') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
